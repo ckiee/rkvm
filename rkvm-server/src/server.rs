@@ -63,9 +63,9 @@ pub async fn run(
 
                 // Remove dead clients.
                 clients.retain(|_, client: &mut Sender<_>| !client.is_closed());
-                if !clients.contains(current) {
-                    current = 0;
-                }
+                // if !clients.contains(current) {
+                //     current = 0;
+                // }
 
                 let init_updates = devices
                     .iter()
@@ -82,7 +82,7 @@ pub async fn run(
                     .collect();
 
                 let (sender, receiver) = mpsc::channel(1);
-                clients.insert(sender);
+                current = clients.insert(sender);
 
                 let span = tracing::info_span!("connection", addr = %addr);
                 tokio::spawn(
